@@ -1,103 +1,109 @@
-import Image from "next/image";
+'use client';
+
+import { useState } from 'react';
+import { useAuth } from '@/context/AuthContext';
+import { useCharacters } from '../hooks/useCharacters';
+import { LoginForm } from '../components/LoginForm';
+import { Header } from '../components/Header';
+import { Profile } from '../components/Profile';
+import { CharacterCard } from '../components/CharacterCard';
+import { CharacterModal } from '../components/CharacterModal';
+import { Pagination } from '../components/Pagination';
+import { Character } from '../types/character';
 
 export default function Home() {
-  return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+  const { user, isLoading: authLoading } = useAuth();
+  
+  // Estados existentes (sin cambios)
+  const { characters, page, info, loading, error, nextPage, prevPage } = useCharacters();
+  const [selectedCharacter, setSelectedCharacter] = useState<Character | null>(null);
+  
+  // NUEVO: Estado para mostrar/ocultar perfil
+  const [showProfile, setShowProfile] = useState(false);
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+  // NUEVO: Loading inicial mientras verifica autenticación
+  if (authLoading) {
+    return (
+      <div className="min-h-screen bg-gray-900 flex items-center justify-center">
+        <div className="text-center">
+          <div className="text-6xl mb-4">🛸</div>
+          <div className="text-2xl text-white animate-pulse">Loading portal...</div>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+      </div>
+    );
+  }
+
+  // NUEVO: Si no hay usuario, muestra el login
+  if (!user) {
+    return <LoginForm />;
+  }
+
+  // Usuario autenticado: Muestra la aplicación (tu código existente con mejoras)
+  return (
+    <main className="min-h-screen bg-gray-900 p-6">
+      <div className="max-w-7xl mx-auto">
+        
+        {/*  NUEVO: Header con botón de perfil */}
+        <Header 
+          onToggleProfile={() => setShowProfile(!showProfile)}
+          showProfile={showProfile}
+        />
+
+        {/*  NUEVO: Sección de perfil (se muestra/oculta) */}
+        {showProfile && (
+          <div className="fade-in">
+            <Profile />
+          </div>
+        )}
+
+        {/*  Error (sin cambios) */}
+        {error && (
+          <div className="bg-red-500 text-white p-4 rounded-lg mb-6 flex items-center gap-2">
+            <span>❌</span>
+            <span>Error: {error}</span>
+          </div>
+        )}
+
+        {/*Loading (mejorado con icono) */}
+        {loading ? (
+          <div className="flex justify-center items-center h-64">
+            <div className="text-center">
+              <div className="text-4xl mb-2">🌀</div>
+              <div className="text-2xl text-white">Loading characters...</div>
+            </div>
+          </div>
+        ) : (
+          <>
+            {/*Grid de personajes (sin cambios) */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 mb-8">
+              {characters.map((character) => (
+                <CharacterCard 
+                  key={character.id} 
+                  character={character}
+                  onViewDetails={setSelectedCharacter}
+                />
+              ))}
+            </div>
+
+            {/* Paginación (sin cambios) */}
+            {info && (
+              <Pagination
+                info={info}
+                page={page}
+                onPrevPage={prevPage}
+                onNextPage={nextPage}
+              />
+            )}
+          </>
+        )}
+
+        {/* 🔍 Modal de detalles (sin cambios) */}
+        <CharacterModal 
+          character={selectedCharacter}
+          onClose={() => setSelectedCharacter(null)}
+        />
+      </div>
+    </main>
   );
 }
+
