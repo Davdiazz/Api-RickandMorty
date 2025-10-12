@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Character, Info, CharactersResponse } from '../types/character';
+import { Character, Info, GraphQLResponse } from '../types/character';
 
 interface UseCharactersReturn {
   characters: Character[];
@@ -63,7 +63,7 @@ export const useCharacters = (): UseCharactersReturn => {
         })
       });
 
-      const data: CharactersResponse = await response.json();
+      const data: GraphQLResponse = await response.json();
       
       if (data.errors) {
         throw new Error(data.errors[0].message);

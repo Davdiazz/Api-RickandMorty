@@ -1,9 +1,10 @@
+// components/Profile.tsx
 'use client';
 
 import { useAuth } from '@/context/AuthContext';
 
 export const Profile = () => {
-  const { user, logout } = useAuth();
+  const { user } = useAuth();
 
   if (!user) return null;
 
@@ -37,20 +38,8 @@ export const Profile = () => {
   };
 
   return (
-    <div className="bg-gray-800 rounded-2xl shadow-2xl p-8 max-w-3xl mx-auto mb-8 border border-gray-700">
-      {/* 📌 HEADER con título y botón logout */}
-      <div className="flex items-center justify-between mb-8">
-        <h2 className="text-3xl font-bold text-white flex items-center gap-3">
-          <span>👤</span> Profile
-        </h2>
-        <button
-          onClick={logout}
-          className="px-5 py-2.5 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors font-medium flex items-center gap-2 shadow-lg"
-        >
-          <span>🚪</span> Logout
-        </button>
-      </div>
-
+    <div className="bg-gray-800 rounded-2xl shadow-2xl p-8 max-w-3xl mx-auto border border-gray-700">
+      
       <div className="space-y-6">
         {/* Avatar y datos principales */}
         <div className="flex items-center gap-6 pb-6 border-b border-gray-700">
