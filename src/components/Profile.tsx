@@ -1,10 +1,10 @@
-// components/Profile.tsx
 'use client';
 
-import { useAuth } from '@/context/AuthContext';
+//import { useAuth } from '@/context/AuthContext';
+import { useAuthStore } from '../app/store/authStore';
 
 export const Profile = () => {
-  const { user } = useAuth();
+  const user = useAuthStore((state) => state.user);
 
   if (!user) return null;
 
@@ -46,17 +46,17 @@ export const Profile = () => {
           {/* Avatar con inicial */}
           <div
             className={`w-28 h-28 bg-gradient-to-br ${getAvatarColor(
-              user.name
+              user.username
             )} rounded-full flex items-center justify-center shadow-xl ring-4 ring-gray-700`}
           >
             <span className="text-5xl font-bold text-white">
-              {user.name.charAt(0).toUpperCase()}
+              {user.username.charAt(0).toUpperCase()}
             </span>
           </div>
 
           {/* Información del usuario */}
           <div className="flex-1">
-            <h3 className="text-3xl font-bold text-white mb-2">{user.name}</h3>
+            <h3 className="text-3xl font-bold text-white mb-2">{user.username}</h3>
             <p className="text-gray-400 flex items-center gap-2 text-lg">
               <span>📧</span>
               {user.email}

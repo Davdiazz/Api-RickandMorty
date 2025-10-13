@@ -3,11 +3,19 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useAuth } from '@/context/AuthContext';
+import { useRouter } from 'next/navigation';
+import { useAuthStore } from '../app/store/authStore';
 
 export const Header = () => {
   const pathname = usePathname();
-  const { user, logout } = useAuth();
+  const logout = useAuthStore((state) => state.logout);
+  const user = useAuthStore((state) => state.user);
+  const router = useRouter();
+
+  const handleLogout = () => {
+    logout();
+    router.push('/login');
+  };
 
   return (
     <header className="bg-gray-800 rounded-2xl shadow-2xl p-6 mb-8 border border-gray-700">
@@ -16,10 +24,9 @@ export const Header = () => {
           <h1 className="text-4xl font-bold text-white flex items-center gap-3 mb-2">
             <span>🛸</span> Rick & Morty Portal
           </h1>
-          {/* ✅ BIEN: Accediendo a user.name */}
-// ✅ CORRECTO:
+
 <p className="text-gray-400">
-  Welcome back, <span className="text-blue-400 font-semibold">{user?.name}</span>!
+  Welcome back, <span className="text-blue-400 font-semibold">{user?.username}</span>!
 </p>
         </div>
 
@@ -47,7 +54,7 @@ export const Header = () => {
           </Link>
 
           <button
-            onClick={logout}
+            onClick={handleLogout}
             className="px-5 py-2.5 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors font-medium flex items-center gap-2"
           >
             <span>🚪</span> Logout

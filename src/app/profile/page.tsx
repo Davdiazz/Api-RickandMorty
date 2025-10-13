@@ -3,9 +3,13 @@
 import Link from 'next/link';
 import { useAuth } from '@/context/AuthContext';
 import { Profile } from '@/components/Profile';
+import { useAuthStore } from '../store/authStore';
 
 export default function ProfilePage() {
-  const { user, logout } = useAuth();
+  //const { user, logout } = useAuth();
+  const logged = useAuthStore((state) => state.logged);
+  const user = useAuthStore((state) => state.user);
+  const logout = useAuthStore((state) => state.logout);
 
   return (
     <main className="min-h-screen bg-gray-900 p-6">
@@ -19,7 +23,7 @@ export default function ProfilePage() {
               </h1>
               {user && (
                 <p className="text-gray-400">
-                  Manage your account, <span className="text-blue-400 font-semibold">{user.name}</span>
+                  Manage your account, <span className="text-blue-400 font-semibold">{user.username}</span>
                 </p>
               )}
             </div>
