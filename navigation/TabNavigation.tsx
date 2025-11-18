@@ -21,12 +21,12 @@ const TabNavigation = () => {
       />
       
       <Tab.Screen 
-        name='Ajustes' 
+        name='Perfil' 
         component={Setting}
         options={{
           headerShown: false,
           tabBarIcon: ({ color, size }) => (
-            <AntDesign name="setting" size={24} color="black" />
+            <AntDesign name="profile" size={24} color="black" />
           ),
         }}
       />
